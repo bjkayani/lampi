@@ -1,0 +1,7 @@
+# using workaround https://github.com/ansible/ansible-modules-core/issues/1741
+- name: upgrade everything
+  become: yes
+  apt:
+    upgrade: 'yes'
+    force_apt_get: yes
+

@@ -1,0 +1,30 @@
+---
+# chapter 1 variables
+cache_update_valid_secs: 900
+pigpio_archive: files/01_pigpio.zip
+pigpio_tmp_dir: /tmp/pigpio
+path_to_pigpiod: /usr/local/bin/pigpiod
+minimum_pigpiod_version: 68
+pigiod_cron_file: 1_pigpiod_ansible
+
+# chapter 2 variables
+fbcp_repo_url: https://github.com/tasanakorn/rpi-fbcp
+fbcp_dest_dir: /tmp/ansible/rpi-fbcp
+fbcp_build_dir: /tmp/ansible/rpi-fbcp/build
+fbcp_install_location: /usr/local/bin/fbcp
+pi_user_kivy_config: /home/pi/.kivy/config.ini
+kivy_config_dict_input:
+    "%(name)s": "probesysfs,provider=mtdev,param=max_position_x=240,param=max_position_y=320"
+boot_config: /boot/config.txt
+connected_devices_git_repo_url: "git@github.com:bjkayani/lampi.git"
+connected_devices_git_repo_version: master
+repo_directory: "/home/pi/connected-devices"
+lampi_app_cron_file: "3_lampiapp_ansible"
+lamp_service_cron_file: "2_lampservice_ansible"
+
+# chapter 09 variables
+nvm_install_script_url: "https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh"
+nodejs_version: "8.15.1"
+nvm_path: "/home/pi/.nvm/nvm.sh"
+
+

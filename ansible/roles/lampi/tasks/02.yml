@@ -1,0 +1,6 @@
+- import_tasks: 02_nano.yml
+- import_tasks: 02_pitft.yml
+- import_tasks: 02_kivy.yml
+- import_tasks: 02_lampi_app.yml
+
+

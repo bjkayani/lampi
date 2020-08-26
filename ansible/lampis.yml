@@ -1,0 +1,16 @@
+# our LAMPi specific playbooks (there will be others, non-device playbooks, later)
+- hosts: lampis
+  vars:
+    ec2_broker_port: 50001
+  roles:
+    - lampi
+  # force  apt-get (avoids annoying Ansible warnings about 
+  #  aptitude being missing)
+  module_defaults:
+    apt:
+      force_apt_get: yes
+  pre_tasks:
+    - name: Verify Ansible meets our version requirements.
+      assert:
+        that: "ansible_version.full is version_compare('2.8', '>=')"
+        msg: "You must update Ansible to at least 2.8."

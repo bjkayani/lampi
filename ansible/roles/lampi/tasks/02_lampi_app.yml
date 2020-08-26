@@ -1,0 +1,27 @@
+- name: install our repo
+  become: no # need to explicitly do this to allow SSH host key forwarding
+  git:
+    repo:  "{{ connected_devices_git_repo_url }}"
+    dest: "{{ repo_directory }}"
+    version: "{{ connected_devices_git_repo_version }}"
+    accept_hostkey: yes
+
+- name: remove any cron task from the assignment
+  become: True
+  cron:
+    special_time: reboot
+    user: root
+    cron_file: 3_lampiapp
+    state: absent
+    name: student_lampi_app_cron
+
+# not using the Ansible cron module because tricky to install an
+#  entry in root's crontab that executes as a different user
+- name: install a cron task to start the Lampi Kivy app at startup
+  become: True
+  template:
+    dest: "/etc/cron.d/{{ lampi_app_cron_file }}"
+    owner: root
+    mode: u+rw,g=r,o=r
+    src: lampi_app_crontab
+

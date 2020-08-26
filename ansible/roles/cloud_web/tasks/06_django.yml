@@ -1,0 +1,39 @@
+
+- name: install Django (and pexpect for Ansible)
+  become: True
+  pip:
+    name: ['django==2.2.10', 'pexpect']
+
+
+- name: create Django migrations 
+  django_manage:
+    command: makemigrations
+    app_path: "{{ django_dir }}"
+
+
+- name: run Django migrations (bootstrap database)
+  django_manage:
+    command: migrate
+    app_path: "{{ django_dir }}"
+
+- name: check if superuser exists
+  shell: echo "from django.contrib.auth import get_user_model; User=get_user_model(); print(User.objects.filter(username='{{django_admin_username}}').count()>0)" | "{{django_dir}}/manage.py" shell
+  args:
+    chdir: "{{ django_dir }}"
+  environment:
+     DJANGO_SETTINGS_MODULE: "{{django_settings}}"
+  register: superuser_exists
+
+- name: create Django superuser
+  django_manage:
+    command: "createsuperuser --noinput --username={{django_admin_username}} --email={{django_admin_email}}"
+    app_path: "{{ django_dir }}"
+  when: superuser_exists.stdout.find('True')==-1
+
+- name: set Django superuser password
+  expect:
+    command: "{{django_dir}}/manage.py changepassword {{django_admin_username}}"
+    responses:
+      (?i)Password: "{{django_admin_password}}"
+      (?i)again: "{{django_admin_password}}"
+

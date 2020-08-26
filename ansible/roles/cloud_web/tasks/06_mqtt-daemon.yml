@@ -1,0 +1,31 @@
+- name: install supervisor
+  become: True
+  apt:
+    name: supervisor
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+- name: install supervisor configuration file for mqtt-daemon
+  become: True
+  template:
+    dest: /etc/supervisor/conf.d/mqtt-daemon.conf
+    owner: root
+    mode: u+rw,g=r,o=r
+    src: mqtt-daemon.conf
+
+- name: some hackery to make Supervisor work - part1
+  become: True
+  systemd:
+    name: supervisor
+    enabled: yes
+
+- name: some hackery to make Supervisor work - part2
+  become: True
+  systemd:
+    name: supervisor
+    state: restarted
+
+- name: make supervisord aware of our new program
+  become: True
+  supervisorctl:
+    name: mqtt-daemon
+    state: "present"

@@ -1,0 +1,17 @@
+- name: remove any cron task from the assignment
+  become: True
+  cron:
+    user: root
+    cron_file: "2_lampservice"
+    state: absent
+    name: student_cron_lampservice
+
+# not using the Ansible cron module because tricky to install an
+#  entry in root's crontab that executes as a different user
+- name: install a cron task to start the lamp service at startup
+  become: True
+  template:
+    dest: "/etc/cron.d/{{ lamp_service_cron_file }}"
+    owner: root
+    mode: u+rw,g=r,o=r
+    src: lamp_service_crontab

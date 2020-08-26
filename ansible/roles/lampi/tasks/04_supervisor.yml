@@ -1,0 +1,49 @@
+- name: find any /etc/cron.d files
+  become: True
+  shell: find /etc/cron.d/ -not -path '*/\.*' -type f
+  register: cron_files
+  ignore_errors: True
+
+
+- name: remove any /etc/cron.d files
+  become: True
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ cron_files.stdout_lines }}"
+
+
+- name: install supervisor
+  become: True
+  apt:
+    name: supervisor
+    force: yes
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+ 
+
+- name: install supervisor configuration files
+  become: True
+  template:
+    dest: "/etc/supervisor/conf.d/{{ item.filename }}"
+    owner: root
+    mode: u+rw,g=r,o=r
+    src: "{{ item.src }}"
+  with_items:
+    - { filename: "fbcp.conf", src: "fbcp.conf" }
+    - { filename: "pigpiod.conf", src: "pigpiod.conf" } 
+    - { filename: "lamp_service.conf", src: "lamp_service.conf" } 
+    - { filename: "lamp_ui.conf", src: "lamp_ui.conf" } 
+
+
+- name: make supervisord aware of our new programs to manage
+  become: True
+  supervisorctl:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - fbcp
+    - pigpiod
+    - lamp_service
+    - lamp_ui
+  
+

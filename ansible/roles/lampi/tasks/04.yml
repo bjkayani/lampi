@@ -1,0 +1,3 @@
+- import_tasks: 04_supervisor.yml
+- import_tasks: 04_mqtt_bridge.yml
+  tags: [debug04]

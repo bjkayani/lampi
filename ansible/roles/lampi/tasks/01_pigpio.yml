@@ -1,0 +1,61 @@
+- name: see if pigpiod already installed
+  stat: path={{ path_to_pigpiod }}
+  register: pigpiod_binary
+
+- name: see if pigpiod is the correct version
+  command: "{{ path_to_pigpiod }} -v"
+  register: pigpiod_version
+  when: pigpiod_binary.stat.exists
+
+- name: stop any pigpiod - WILL LIKELY FAIL, BUT IGNORED
+  become: yes
+  command: killall pigpiod
+  ignore_errors: true
+
+- name: remove temporary directory
+  become: yes 
+  file: path={{ pigpio_tmp_dir }} state=absent
+  ignore_errors: true
+
+- name: create temporary  directory
+  become: yes 
+  file: path={{ pigpio_tmp_dir }} state=directory
+
+- name: extract files from archive
+  become: yes 
+  when: (not pigpiod_binary.stat.exists) or pigpiod_version.stdout|int <  minimum_pigpiod_version
+  unarchive: src={{ pigpio_archive }} dest={{ pigpio_tmp_dir }}
+
+- name: make pigpio
+  become: yes 
+  when: (not pigpiod_binary.stat.exists) or pigpiod_version.stdout|int <  minimum_pigpiod_version
+  make: chdir={{ pigpio_tmp_dir }}/PIGPIO
+
+- name: install pigpio
+  become: yes 
+  when: (not pigpiod_binary.stat.exists) or pigpiod_version.stdout|int <  minimum_pigpiod_version
+  make: chdir={{ pigpio_tmp_dir }}/PIGPIO target=install
+
+- name: remove any cron task from the assignment
+  become: yes
+  cron:
+    special_time: reboot
+    job: "{{ path_to_pigpiod }}"
+    user: root
+    cron_file: 1_pigpiod
+    state: absent
+    name: pigpiod_student
+
+- name: create cron entry to run daemon at reboot
+  become: yes 
+  cron:
+    special_time: reboot
+    job: "{{ path_to_pigpiod }}"
+    user: root
+    cron_file: "{{ pigiod_cron_file }}"
+    name: "run pigpiod on reboot"
+
+- name: remove temporary directory
+  become: yes 
+  file: path={{ pigpio_tmp_dir }} state=absent
+

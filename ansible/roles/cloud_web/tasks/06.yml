@@ -1,0 +1,4 @@
+- import_tasks: 06_django.yml
+- import_tasks: 06_mqtt-daemon.yml
+
+

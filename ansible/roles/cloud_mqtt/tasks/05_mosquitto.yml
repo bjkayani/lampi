@@ -1,0 +1,13 @@
+- name: add MQTT websockets listener (with new config)
+  become: True
+  template:
+    dest: /etc/mosquitto/conf.d/port.conf
+    src: 05_mqtt_port.conf
+    force: yes
+
+- name: restart mosquitto
+  become: True
+  service:
+    name: mosquitto
+    state: restarted 
+

@@ -1,0 +1,12 @@
+- name: install MQTT bridge configuration (updated)
+  become: True
+  template:
+    src: 07_mqtt_bridge.conf
+    dest: /etc/mosquitto/conf.d/lampi_bridge.conf
+
+- name: restart mosquitto
+  become: True
+  service:
+    name: mosquitto
+    state: restarted 
+

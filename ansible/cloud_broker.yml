@@ -1,0 +1,5 @@
+# our cloud broker playbooks
+- hosts: cloud_brokers
+  roles:
+    - cloud_mqtt
+    - cloud_web

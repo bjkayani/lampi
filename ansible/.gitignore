@@ -1,0 +1,3 @@
+# Ansible error retry file
+*.retry
+inventory.ini

@@ -1,0 +1,6 @@
+- name: make sure wifi power management is disabled
+  become: yes
+  lineinfile:
+    dest: /etc/network/interfaces
+    insertafter: iface wlan0 inet manual
+    line: '    wireless-power off'

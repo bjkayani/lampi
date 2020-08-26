@@ -1,0 +1,16 @@
+# update apt cache at beginning of beginning of Ansible tasks
+#  later apt tasks can use cache_valid_time to avoid unnecessary updates
+
+- name: update apt cache
+  become: yes
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+
+# upgrade everything
+- name: upgrade everything
+  become: yes
+  apt:
+    upgrade: 'yes'
+    force_apt_get: yes
+

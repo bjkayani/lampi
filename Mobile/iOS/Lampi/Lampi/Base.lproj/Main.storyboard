@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Lampi View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="LampiViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qBM-fN-AAK" userLabel="Top Color">
+                                <rect key="frame" x="0.0" y="20" width="414" height="270"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rUA-FG-jTA" userLabel="Sliders">
+                                <rect key="frame" x="20" y="290" width="374" height="332"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gqj-oN-uJz" userLabel="Hue Slider" customClass="GradientSlider">
+                                        <rect key="frame" x="18" y="36" width="338" height="72"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="64" id="l1Z-yZ-iGl"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="trackBorderColor">
+                                                <color key="value" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="hasRainbow" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="thickness">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="trackBorderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="thumbSize">
+                                                <real key="value" value="50"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onHueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="PcU-Dw-ihp"/>
+                                        </connections>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ruo-Yh-3w7" userLabel="Saturation Slider" customClass="GradientSlider">
+                                        <rect key="frame" x="18" y="130" width="338" height="72"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="64" id="hSS-QM-207"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="trackBorderColor">
+                                                <color key="value" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="hasRainbow" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="thickness">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="minColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="maxColor">
+                                                <color key="value" red="1" green="0.046319447729999998" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="trackBorderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="thumbSize">
+                                                <real key="value" value="50"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onSaturationChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="lM4-uZ-g7P"/>
+                                        </connections>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vys-7s-nmx" userLabel="Brightness Slider" customClass="GradientSlider">
+                                        <rect key="frame" x="18" y="224" width="338" height="72"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="64" id="Han-GK-MKq"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="trackBorderColor">
+                                                <color key="value" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="hasRainbow" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="thickness">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="minColor">
+                                                <color key="value" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="maxColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="trackBorderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="thumbSize">
+                                                <real key="value" value="50"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onBrightnessChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="egg-gs-kpb"/>
+                                        </connections>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="ruo-Yh-3w7" firstAttribute="leading" secondItem="rUA-FG-jTA" secondAttribute="leading" constant="20" id="5M3-AL-TwR"/>
+                                    <constraint firstAttribute="bottom" secondItem="vys-7s-nmx" secondAttribute="bottom" constant="40" id="BQX-YD-4AF"/>
+                                    <constraint firstAttribute="trailing" secondItem="ruo-Yh-3w7" secondAttribute="trailing" constant="20" id="E3w-zg-htp"/>
+                                    <constraint firstItem="vys-7s-nmx" firstAttribute="leading" secondItem="rUA-FG-jTA" secondAttribute="leading" constant="20" id="L6A-Cj-DYI"/>
+                                    <constraint firstItem="vys-7s-nmx" firstAttribute="top" secondItem="ruo-Yh-3w7" secondAttribute="bottom" constant="30" id="P6V-km-hjA"/>
+                                    <constraint firstAttribute="trailing" secondItem="Gqj-oN-uJz" secondAttribute="trailing" constant="20" id="TDD-5H-P6p"/>
+                                    <constraint firstAttribute="trailing" secondItem="vys-7s-nmx" secondAttribute="trailing" constant="20" id="VM9-QQ-yHl"/>
+                                    <constraint firstItem="ruo-Yh-3w7" firstAttribute="top" secondItem="Gqj-oN-uJz" secondAttribute="bottom" constant="30" id="btb-uy-8hM"/>
+                                    <constraint firstItem="Gqj-oN-uJz" firstAttribute="leading" secondItem="rUA-FG-jTA" secondAttribute="leading" constant="20" id="fOM-T7-MtX"/>
+                                    <constraint firstItem="Gqj-oN-uJz" firstAttribute="top" secondItem="rUA-FG-jTA" secondAttribute="top" constant="40" id="vw4-nt-FUt"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nuo-Sy-g2y" userLabel="Bottom Color">
+                                <rect key="frame" x="0.0" y="622" width="414" height="14"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="14" id="ay6-wQ-vDd"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wsV-V7-Qk3" userLabel="Buttons">
+                                <rect key="frame" x="0.0" y="636" width="414" height="100"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hpp-Y2-xFG">
+                                        <rect key="frame" x="184.66666666666666" y="28" width="44" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="Hpp-Y2-xFG" secondAttribute="height" multiplier="1:1" id="Dpc-Mw-h2Z"/>
+                                            <constraint firstAttribute="width" constant="44" id="yhC-tf-2jh"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="power_light"/>
+                                        <connections>
+                                            <action selector="isOnOffToggled:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xkE-uD-5so"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="Hpp-Y2-xFG" firstAttribute="centerY" secondItem="wsV-V7-Qk3" secondAttribute="centerY" id="IuE-yO-aXC"/>
+                                    <constraint firstItem="Hpp-Y2-xFG" firstAttribute="centerX" secondItem="wsV-V7-Qk3" secondAttribute="centerX" id="WHT-oi-XaN"/>
+                                    <constraint firstAttribute="height" constant="100" id="tSF-s5-9Uu"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="rUA-FG-jTA" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="CAA-mY-PBa"/>
+                            <constraint firstItem="rUA-FG-jTA" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Oas-Nu-Mgw"/>
+                            <constraint firstItem="Nuo-Sy-g2y" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="RfS-9W-4NM"/>
+                            <constraint firstItem="qBM-fN-AAK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Vfn-T2-OGB"/>
+                            <constraint firstItem="wsV-V7-Qk3" firstAttribute="top" secondItem="Nuo-Sy-g2y" secondAttribute="bottom" id="bCN-xf-O1b"/>
+                            <constraint firstAttribute="trailing" secondItem="Nuo-Sy-g2y" secondAttribute="trailing" id="bp7-5L-tio"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="wsV-V7-Qk3" secondAttribute="bottom" id="ejJ-W5-dJq"/>
+                            <constraint firstItem="Nuo-Sy-g2y" firstAttribute="top" secondItem="rUA-FG-jTA" secondAttribute="bottom" id="nZN-51-IOh"/>
+                            <constraint firstItem="wsV-V7-Qk3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ndv-C3-Bbu"/>
+                            <constraint firstItem="rUA-FG-jTA" firstAttribute="top" secondItem="qBM-fN-AAK" secondAttribute="bottom" id="saL-Lk-QGK"/>
+                            <constraint firstItem="qBM-fN-AAK" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="w4y-AD-4Ea"/>
+                            <constraint firstAttribute="trailing" secondItem="qBM-fN-AAK" secondAttribute="trailing" id="yYH-Gp-itO"/>
+                            <constraint firstAttribute="trailing" secondItem="wsV-V7-Qk3" secondAttribute="trailing" id="ym0-DI-F81"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="bottomColorBox" destination="Nuo-Sy-g2y" id="rh2-d7-e0j"/>
+                        <outlet property="brightnessSlider" destination="vys-7s-nmx" id="kT5-49-rMA"/>
+                        <outlet property="hueSlider" destination="Gqj-oN-uJz" id="Vn2-ZL-9Ou"/>
+                        <outlet property="powerButton" destination="Hpp-Y2-xFG" id="dXX-3B-l4t"/>
+                        <outlet property="saturationSlider" destination="ruo-Yh-3w7" id="qiD-Ek-ibj"/>
+                        <outlet property="topColorBox" destination="qBM-fN-AAK" id="ZRm-6q-hcb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="327.536231884058" y="419.02173913043481"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="power_light" width="44" height="44"/>
+    </resources>
+</document>

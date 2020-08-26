@@ -1,0 +1,29 @@
+# note, we don't need to be root for these tasks as they are all
+#   user configiuration files
+
+- name: install nanorc
+  git:
+    repo: https://github.com/scopatz/nanorc.git
+    dest: /home/pi/.nano
+    version: v2.9
+
+- name: read scopatz nanorc into a register
+  shell: cat /home/pi/.nano/nanorc
+  register: scopatz_nanorc
+
+- name: update nanorc with reasonable defaults
+  blockinfile:
+    dest: /home/pi/.nanorc
+    create: yes
+    insertafter: EOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK #" 
+    block: |
+      {{ scopatz_nanorc.stdout }}
+      set tabsize 4
+      set tabstospaces
+
+    
+  
+
+
+ 

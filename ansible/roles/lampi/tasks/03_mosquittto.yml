@@ -1,0 +1,34 @@
+# Leaving this here; might want it in the future
+#  currently, latest versions of mosquitto (1.4.14), which have some
+#  important security fixes, are available in the Mosquitto/Eclipse
+#  repository; Unfortunately, the packages are broken on Stretch
+#
+#  see here for installation issues:
+#    https://www.raspberrypi.org/forums/viewtopic.php?t=191027
+#
+#  see here for a gnarly set of workaround instructions:
+#    https://www.eclipse.org/forums/index.php?t=msg&th=1089302&goto=1773991&
+#  
+#- name: install mosquitto apt repository key
+#  become: True
+#  apt_key: 
+#    url: http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+#    id: 61611AE430993623
+#
+#- name: install mosquitto apt repository
+#  become: True
+#  apt_repository:
+#    repo: deb http://repo.mosquitto.org/debian jessie main
+#    update_cache: yes
+
+- name: install mosquitto broker and client
+  become: True
+  apt:
+    name: ['mosquitto', 'mosquitto-clients']
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+- name: install Paho Python MQTT client library
+  become: True
+  pip:
+    name: paho-mqtt
+

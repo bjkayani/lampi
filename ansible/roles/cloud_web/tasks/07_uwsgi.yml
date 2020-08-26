@@ -1,0 +1,101 @@
+- name: gather ec2 facts for later
+  ec2_metadata_facts:
+
+- name: install dependencies for uwsgi
+  become: True
+  apt:
+    name: ['build-essential', 'python3-dev']
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+- name: install uwsgi
+  become: True
+  pip:
+    name: uwsgi
+
+- name: make uwsgi /etc directory
+  become: True
+  file:
+    path: /etc/uwsgi/vassals
+    state: directory
+    recurse: yes
+
+- name: install our uwsgi Django configuration
+  become: True
+  template:
+    src: 07_lampisite_uwsgi.ini
+    dest: "{{ django_dir }}/lampisite_uwsgi.ini"
+
+
+- name: link lampisite uwsgi file to uwsgi vassals
+  become: True
+  file:
+    path: /etc/uwsgi/vassals/lampisite_uwsgi.ini
+    src: "{{ django_dir }}/lampisite_uwsgi.ini"
+    state: link 
+
+- name: add uwsgi supervisor configuration
+  become: True
+  template:
+    dest: /etc/supervisor/conf.d/uwsgi.conf
+    owner: root
+    mode: u+rw,g=r,o=r
+    src: 07_uwsgi.conf
+
+- name: make supervisor aware of uwsgi
+  become: True
+  supervisorctl:
+    name: uwsgi
+    state: "present"
+
+- name: make www-data our django project group
+  become: True
+  file:
+    state: directory
+    recurse: yes
+    group: www-data
+    path: "{{ django_dir }}"
+
+- name: add ubuntu user to www-data group
+  become: True
+  user:
+    append: yes
+    groups: www-data
+    name: ubuntu
+
+- name: make django database group writable
+  become: True
+  file:
+    path: "{{ django_dir }}/db.sqlite3"
+    mode: "u=rw,g=rw,o=r"
+    state: file
+
+- name: run Django collectstatic
+  django_manage:
+    command: collectstatic
+    app_path: "{{ django_dir }}"
+
+- name: install our new NGINX Django configuration
+  become: True
+  template:
+    dest: /etc/nginx/sites-available/lampisite.conf
+    src: 07_lampisite_nginx.conf
+
+- name: link nginx configuration
+  become: True
+  file:
+    src: /etc/nginx/sites-available/lampisite.conf
+    dest: /etc/nginx/sites-enabled/lampisite.conf
+    state: link
+
+- name: install new top-level NGINX configuration
+  become: True
+  template:
+    src: 07_nginx.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: restart NGINX
+  become: True
+  service:
+    name: nginx
+    state: restarted
+

@@ -1,0 +1,3 @@
+HOME=/home/pi
+@reboot pi cd {{ repo_directory }}/Lampi && ./lamp_service.py
+

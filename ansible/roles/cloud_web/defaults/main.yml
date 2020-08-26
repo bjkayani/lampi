@@ -1,0 +1,15 @@
+---
+# vars file for cloud_web
+
+# variables for chapter 05
+connected_devices_git_repo_url: "git@github.com:bjkayani/lampi.git"
+repo_directory: /home/ubuntu/connected-devices
+connected_devices_git_repo_version: master
+root_web_directory: /home/ubuntu/connected-devices/Web/static
+
+# variables for chapter 06
+django_dir: "{{repo_directory}}/Web/lampisite"
+django_admin_username: admin
+django_admin_email: blah@blah.com
+django_admin_password: iot12345
+django_settings: lampisite.settings

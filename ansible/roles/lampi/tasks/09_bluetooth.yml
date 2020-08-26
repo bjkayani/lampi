@@ -1,0 +1,37 @@
+- name: install supervisor bluetooth config
+  become: True
+  tags: bleno
+  template:
+    dest: "/etc/supervisor/conf.d/{{ item.filename }}"
+    owner: root
+    mode: u+rw,g=r,o=r
+    src: "{{ item.src }}"
+  with_items:
+    - { filename: "hci0_up.conf", src: "hci0_up.conf" } 
+    - { filename: "bluetooth_service.conf", src: "bluetooth_service.conf" } 
+
+
+- name: make supervisord aware of our new programs to manage
+  become: True
+  tags: bleno
+  supervisorctl:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - hci0_up
+    - bluetooth_service
+  
+- name: install MQTT bridge configuration (updated)
+  become: True
+  tags: bleno
+  template:
+    src: 09_mqtt_bridge.conf
+    dest: /etc/mosquitto/conf.d/lampi_bridge.conf
+
+- name: restart mosquitto
+  become: True
+  tags: bleno
+  service:
+    name: mosquitto
+    state: restarted 
+

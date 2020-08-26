@@ -1,0 +1,35 @@
+- name: remove Debian pip (python-pip)
+  become: True
+  apt:
+    name: ['python-pip', 'python3-pip']
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+    state: absent
+
+- name: Remove dependencies that are no longer required
+  become: True
+  apt:
+    autoremove: yes
+
+- name: install distutils for pip
+  become: True
+  apt:
+    name: python3-distutils
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+# install Python pip
+- name: download get-pip.py
+  become: True
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+    mode: 0755
+
+- name: install pip with get-pip.py with Python3
+  become: True
+  command: python3 /tmp/get-pip.py
+
+- name: install Paho Python MQTT client library
+  become: True
+  pip:
+    name: paho-mqtt
+

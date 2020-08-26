@@ -1,0 +1,17 @@
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+events {
+  worker_connections 768;
+}
+
+http {
+  server {
+    location / {
+      include /etc/nginx/mime.types;
+      root {{ root_web_directory }};
+    }
+  }
+  server_names_hash_bucket_size 128;
+}

@@ -1,0 +1,14 @@
+- name: make sure git is installed
+  become: yes
+  apt:
+    name: git
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+- name: install our repo
+  become: no # need to explicitly do this to allow SSH host key forwarding
+  git:
+    repo:  "{{ connected_devices_git_repo_url }}"
+    dest: "{{ repo_directory }}"
+    version: "{{ connected_devices_git_repo_version }}"
+    accept_hostkey: yes
+

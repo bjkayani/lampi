@@ -1,0 +1,6 @@
+- name: install git
+  become: yes
+  apt:
+    name: git
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+ 

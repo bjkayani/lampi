@@ -1,0 +1,37 @@
+- name: install packages needed for Kivy
+  become: True
+  apt:
+    name: ['python3-pygame', 'python3-dev', 'libmtdev1', 'libgles2-mesa-dev']
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+
+# leaving cython and kivy installs as separate tasks because
+#   they take a long time - leaving them broken out increases visibility
+#   and profiling of Ansible
+# install from binary wheels we have stored in S3 for efficiency (cython in particular takes a long time to build)
+- name: install cython
+  become: True
+  pip:
+    name: https://s3.amazonaws.com/connected-devices/Cython-0.28.2-cp35-cp35m-linux_armv7l.whl
+
+- name: install kivy-garden
+  become: True
+  pip:
+    name: https://s3.amazonaws.com/connected-devices/Kivy_Garden-0.1.4-py3-none-any.whl
+
+
+- name: install kivy
+  become: True
+  pip:
+    name: https://s3.amazonaws.com/connected-devices/Kivy-1.10.1-cp35-cp35m-linux_armv7l.whl
+
+- name: generate kivy config for pi user
+  command: python3 -c "from kivy.app import App;App().load_config()" creates={{ pi_user_kivy_config }}
+
+- name: update pi user kivy config [input] for PiTFT 2.8" Capacitive
+  ini_file:
+    dest: "{{ pi_user_kivy_config }}"
+    section: input
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ kivy_config_dict_input }}"

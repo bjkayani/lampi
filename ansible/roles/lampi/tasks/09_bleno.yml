@@ -1,0 +1,42 @@
+- name: install some dependencies of bleno
+  become: True
+  tags: bleno
+  apt:
+    name: libudev-dev
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+- name: install bleno and mqtt via npm
+  tags: bleno
+  shell: . {{ nvm_path }} && npm install "{{ item }}"
+  args:
+    executable: /bin/bash
+  with_items:
+    - bleno
+    - mqtt
+
+- name: stop bluetooth daemon
+  become: True
+  tags: bleno
+  systemd:
+    name: bluetooth
+    state: stopped
+
+- name: disable bluetooth daemon
+  become: True
+  tags: bleno
+  systemd:
+    name: bluetooth
+    enabled: no
+  
+- name: grant node the permissions to use bluetooth without being root
+  become: True
+  tags: bleno
+  shell: . {{ nvm_path }} && setcap cap_net_raw+eip $(eval readlink -f `which node`)
+  args:
+    executable: /bin/bash
+
+- name: bring hci0 up (there is also a separate supervisord task to do this at startup)
+  become: True
+  tags: bleno
+  shell: /bin/hciconfig hci0 up
+  

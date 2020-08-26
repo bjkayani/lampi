@@ -1,0 +1,9 @@
+- name: append block to the config.txt
+  become: yes
+  blockinfile:
+    dest: /boot/config.txt
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - enable_uart"
+    insertafter: EOF
+    block: |
+      enable_uart=1
+

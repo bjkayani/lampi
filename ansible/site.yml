@@ -1,0 +1,3 @@
+# all of our playbooks
+- import_playbook: cloud_broker.yml
+- import_playbook: lampis.yml

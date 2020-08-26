@@ -1,0 +1,134 @@
+# >COMPATIBILITY: this is all likely to change including kernel version
+
+- name: Remove dependencies that are no longer required
+  become: True
+  apt:
+    autoremove: yes
+
+# removing Debian version of python-pip due to issue with Python requests 
+#   library
+- name: remove Debian pip (python-pip)
+  become: True
+  apt:
+    name: python-pip
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+    state: absent
+
+# install Python pip 
+- name: download get-pip.py
+  become: True
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+    mode: 0755
+
+- name: install pip3 with get-pip.py
+  become: True
+  command: python3 /tmp/get-pip.py
+
+- name: install pexpect for use with the Ansible expect module
+  become: True
+  pip:
+    name: pexpect
+
+- name: download adafruit-pitft.sh
+  become: True
+  get_url:
+    url: https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/adafruit-pitft.sh
+    dest: /tmp/adafruit-pitft.sh
+    mode: 0755
+
+- name: run the adafruit-pitft.sh
+  become: True
+  expect:
+    command: /tmp/adafruit-pitft.sh
+    timeout: 90
+    responses:
+      (?i)SELECT 1-7: "3"
+      (?i)SELECT 1-4: "2"
+      (?i)console to appear on the PiTFT display: "n"
+      (?i)HDMI display to mirror to the PiTFT display: "n"
+      (?i)reboot now: "n"
+
+- name: see if fbcp already installed
+  stat: path={{ fbcp_install_location }}
+  register: fbcp_binary
+
+- name: install cmake
+  become: True
+  when: not fbcp_binary.stat.exists
+  apt:
+    name: cmake
+    cache_valid_time: "{{ cache_update_valid_secs }}"
+
+- name: clone fbcp
+  when: not fbcp_binary.stat.exists
+  git:
+    repo: "{{ fbcp_repo_url }}"
+    dest: "{{ fbcp_dest_dir }}"
+
+- name: make fbcp build directory
+  when: not fbcp_binary.stat.exists
+  file:
+    path: "{{ fbcp_build_dir }}"
+    state: directory
+
+- name: cmake fbcp
+  when: not fbcp_binary.stat.exists
+  command: cmake .. creates={{ fbcp_build_dir }}/Makefile chdir={{ fbcp_build_dir }}
+
+- name: build fbcp
+  when: not fbcp_binary.stat.exists
+  make:
+    chdir: "{{ fbcp_build_dir }}"
+
+- name: install the built fbcp 
+  when: not fbcp_binary.stat.exists
+  become: True
+  command: install fbcp {{ fbcp_install_location }} creates={{ fbcp_install_location }} chdir={{ fbcp_build_dir }}
+
+- name: remove any cron task from the assignment
+  become: True
+  cron:
+    special_time: reboot
+    job: "{{ fbcp_install_location }}"
+    user: root
+    cron_file: 0_fbcp
+    state: absent
+    name: student_fbcp_cron
+
+- name: create cron task to run fbcp on reboot
+  become: True
+  cron:
+    special_time: reboot
+    job: "{{ fbcp_install_location }}"
+    user: root
+    cron_file: 0_fbcp_ansible
+    name: "run fbcp at reboot"
+
+- name: dpkg-reconfigure console-setup for better console fonts
+  become: True
+  debconf:
+    name: console-setup
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: select
+  with_items:
+    - { question: 'console-setup/fontface47', value: 'Terminus' }
+    - { question: 'console-setup/fontsize-fb47', value: '6x12 (framebuffer only)' }
+    - { question: 'console-setup/charmap47', value: 'UTF-8' }
+    - { question: 'console-setup/codeset47', value: 'Guess optimal character set' }
+
+
+- name: update /boot/config.txt for PiTFT 2.8" in portrait mode - HDMI
+  become: True
+  blockinfile:
+    dest: "{{ boot_config }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - HDMI"
+    insertafter: EOF
+    block: |
+      hdmi_force_hotplug=1
+      hdmi_cvt=240 320 60 1 0 0 0
+      hdmi_group=2
+      hdmi_mode=87
+

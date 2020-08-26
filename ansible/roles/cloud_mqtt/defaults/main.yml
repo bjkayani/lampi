@@ -1,0 +1,6 @@
+---
+# vars file for cloud_mqtt
+
+cache_update_valid_secs: 900
+
+mosquitto_ubuntu_version: 1.4.15-2ubuntu0.18.04.3
