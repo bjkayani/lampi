@@ -34,7 +34,7 @@
 - name: download adafruit-pitft.sh
   become: True
   get_url:
-    url: https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/adafruit-pitft.sh
+    url: https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/1ccd4d3453ae7b77b3296e03f08fbc916ca91132/adafruit-pitft.sh
     dest: /tmp/adafruit-pitft.sh
     mode: 0755
 
