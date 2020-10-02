@@ -1,0 +1,8 @@
+ curl -sL "https://deb.nodesource.com/setup_6.x" | sudo -E bash -
+ sudo apt-get update && sudo apt-get upgrade
+ sudo apt-get install build-essential
+ sudo apt-get install npm 
+ sudo npm install -g onoff
+ sudo npm install -g blynk-library
+ export NODE_PATH=/usr/local/lib/node_modules
+ npm install mqtt --save 
