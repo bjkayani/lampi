@@ -9,6 +9,10 @@ var config = {
     on: true
 }
 
+var backlight = {
+    backlight: 1.0
+}
+
 var mqtt = require('mqtt');
 var Blynk = require('/usr/local/lib/node_modules/blynk-library');
 var client = mqtt.connect("mqtt://localhost", {clientId:client_id, port:hostPort})
@@ -21,6 +25,7 @@ var v0 = new blynk.VirtualPin(0);
 var v1 = new blynk.VirtualPin(1);
 var v2 = new blynk.VirtualPin(2);
 var v3 = new blynk.VirtualPin(3);
+var v4 = new blynk.VirtualPin(4);
 
 v0.on('write', function(param) {
     if(param == 1){
@@ -49,6 +54,10 @@ v3.on('write', function(param) {
     client.publish("lamp/set_config", JSON.stringify(config), {qos:1});
   });
   
+v4.on('write', function(param){
+    backlight.backlight = parseFloat(param);
+    client.publish("lamp/backlight", JSON.stringify(backlight), {qos:1});
+})
 
 client.on('connect', function () {
     console.log("MQTT Connected");

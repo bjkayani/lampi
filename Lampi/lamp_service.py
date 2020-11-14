@@ -10,11 +10,12 @@ from lamp_common import *
 PIN_R = 19
 PIN_G = 26
 PIN_B = 13
+PIN_BACKLIGHT = 18
 PINS = [PIN_R, PIN_G, PIN_B]
 PWM_RANGE = 1000
 PWM_FREQUENCY = 1000
 
-LAMP_STATE_FILENAME = "lamp_state.db"
+LAMP_STATE_FILENAME = "lamp_state"
 
 MQTT_CLIENT_ID = "lamp_service"
 
@@ -26,20 +27,28 @@ class InvalidLampConfig(Exception):
 
 
 class LampDriver(object):
-
     def __init__(self):
         self._gpio = pigpio.pi()
+        # Initialize GPIO for the RGB Light
         for color_pin in PINS:
             self._gpio.set_mode(color_pin, pigpio.OUTPUT)
             self._gpio.set_PWM_dutycycle(color_pin, 0)
             self._gpio.set_PWM_frequency(color_pin, PWM_FREQUENCY)
             self._gpio.set_PWM_range(color_pin, PWM_RANGE)
 
+        # Initialize GPIO for Backlight
+        self._gpio.set_mode(PIN_BACKLIGHT, pigpio.OUTPUT)
+        self._gpio.set_PWM_dutycycle(PIN_BACKLIGHT, 0)
+        self._gpio.set_PWM_frequency(PIN_BACKLIGHT, PWM_FREQUENCY)
+        self._gpio.set_PWM_range(PIN_BACKLIGHT, PWM_RANGE)
+
     def change_color(self, *args):
         pins_values = zip(PINS, args)
         for pin, value in pins_values:
             self._gpio.set_PWM_dutycycle(pin, value)
 
+    def change_backlight(self, backlight):
+        self._gpio.set_PWM_dutycycle(PIN_BACKLIGHT, backlight)
 
 class LampService(object):
     def __init__(self):
@@ -55,6 +64,8 @@ class LampService(object):
             self.db['on'] = True
         if 'client' not in self.db:
             self.db['client'] = ''
+        if 'backlight' not in self.db:
+            self.db['backlight'] = round(1.0, FP_DIGITS)
         self.write_current_settings_to_hardware()
 
     def _create_and_configure_broker_client(self):
@@ -65,6 +76,8 @@ class LampService(object):
         client.on_connect = self.on_connect
         client.message_callback_add(TOPIC_SET_LAMP_CONFIG,
                                     self.on_message_set_config)
+        client.message_callback_add(TOPIC_BACKLIGHT_CONTROL,
+                                    self.on_message_set_backlight)
         client.on_message = self.default_on_message
         return client
 
@@ -78,6 +91,7 @@ class LampService(object):
         self._client.publish(client_state_topic(MQTT_CLIENT_ID), "1",
                              qos=2, retain=True)
         self._client.subscribe(TOPIC_SET_LAMP_CONFIG, qos=1)
+        self._client.subscribe(TOPIC_BACKLIGHT_CONTROL, qos=1)
         # publish current lamp state at startup
         self.publish_config_change()
 
@@ -100,6 +114,14 @@ class LampService(object):
             self.publish_config_change()
         except InvalidLampConfig:
             print("error applying new settings " + str(msg.payload))
+
+    def on_message_set_backlight(self, client, userdata, msg):
+        try:
+            backlight = json.loads(msg.payload.decode('utf-8'))
+            if 'backlight' in backlight:
+                self.set_backlight(backlight['backlight'])
+        except InvalidLampConfig:
+            print("error setting backlight " + str(msg.payload))
 
     def publish_config_change(self):
         config = {'color': self.get_current_color(),
@@ -145,13 +167,27 @@ class LampService(object):
             self.db['color'][ch] = round(new_color[ch], FP_DIGITS)
         self.write_current_settings_to_hardware()
 
+    def get_current_backlight(self):
+        return self.db['backlight']
+
+    def set_backlight(self, new_backlight):
+        if(new_backlight < 0 or new_backlight > 1.0):
+            raise InvalidLampConfig()
+        self.db['backlight'] = new_backlight
+        self.write_current_settings_to_hardware()
+        
     def write_current_settings_to_hardware(self):
         onoff = self.get_current_onoff()
         brightness = self.get_current_brightness()
         color = self.get_current_color()
+        backlight = self.get_current_backlight()
 
         r, g, b = self.calculate_rgb(color['h'], color['s'], brightness, onoff)
+        
+        backlight_pwm = backlight * float(PWM_RANGE)
+
         self.lamp_driver.change_color(r, g, b)
+        self.lamp_driver.change_backlight(backlight_pwm)
         self.db.sync()
 
     def calculate_rgb(self, hue, saturation, brightness, is_on):

@@ -6,6 +6,7 @@ DEVICE_ID_FILENAME = '/sys/class/net/eth0/address'
 TOPIC_SET_LAMP_CONFIG = "lamp/set_config"
 TOPIC_LAMP_CHANGE_NOTIFICATION = "lamp/changed"
 TOPIC_LAMP_ASSOCIATED = "lamp/associated"
+TOPIC_BACKLIGHT_CONTROL = "lamp/backlight"
 
 
 def get_device_id():
